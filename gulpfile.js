@@ -24,6 +24,7 @@ let path = {
 	watch: {
 		html: source_folder + '/**/*.html',
 		scss: source_folder + '/scss/**/*.scss',
+		blocks: source_folder + '/blocks/**/*.scss',
 		js: source_folder + '/js/**/*.js',
 		img: source_folder + '/img/**/*.{jpg,png,svg,gif,ico,webp}',
 	},
@@ -49,7 +50,7 @@ function scssBuild() {
 	return src(path.app.scss)
 		.pipe(
 			sass ({
-				outputStyle: 'expanded'
+				outputStyle: 'compressed',
 			})
 		)
 		.pipe(mediaqueries())
@@ -123,6 +124,14 @@ function serve() {
 		scssBuild,
 		reload
 	));
+	watch([path.watch.blocks], {
+			events: ['change'],
+			delay: 100,
+		},
+		series (
+			scssBuild,
+			reload
+		));
 	watch([path.watch.js], {
 		events: ['change'],
 		delay: 100,
